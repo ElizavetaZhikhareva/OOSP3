@@ -1,0 +1,171 @@
+//Реализуйте систему производства мебели, где абстрактная фабрика создает мебель для разных стилей интерьера (классический, современный, минимализм).
+// Интерфейс для стульев
+interface Chair {
+    void sitOn();
+}
+
+// Интерфейс для столов
+interface Table {
+    void use();
+}
+
+// Интерфейс для шкафов
+interface Cabinet {
+    void open();
+}
+
+// Абстрактная фабрика для создания мебели
+interface FurnitureFactory {
+    Chair createChair();
+    Table createTable();
+    Cabinet createCabinet();
+}
+
+// Реализация фабрики для классической мебели
+class ClassicFurnitureFactory implements FurnitureFactory {
+    @Override
+    public Chair createChair() {
+        return new ClassicChair();
+    }
+
+    @Override
+    public Table createTable() {
+        return new ClassicTable();
+    }
+
+    @Override
+    public Cabinet createCabinet() {
+        return new ClassicCabinet();
+    }
+}
+
+// Реализация фабрики для современной мебели
+class ModernFurnitureFactory implements FurnitureFactory {
+    @Override
+    public Chair createChair() {
+        return new ModernChair();
+    }
+
+    @Override
+    public Table createTable() {
+        return new ModernTable();
+    }
+
+    @Override
+    public Cabinet createCabinet() {
+        return new ModernCabinet();
+    }
+}
+
+// Реализация фабрики для минималистичной мебели
+class MinimalistFurnitureFactory implements FurnitureFactory {
+    @Override
+    public Chair createChair() {
+        return new MinimalistChair();
+    }
+
+    @Override
+    public Table createTable() {
+        return new MinimalistTable();
+    }
+
+    @Override
+    public Cabinet createCabinet() {
+        return new MinimalistCabinet();
+    }
+}
+
+// Реализация стула в стиле классики
+class ClassicChair implements Chair {
+    @Override
+    public void sitOn() {
+        System.out.println("Sitting on a classic chair.");
+    }
+}
+
+// Реализация стола в стиле классики
+class ClassicTable implements Table {
+    @Override
+    public void use() {
+        System.out.println("Using a classic table.");
+    }
+}
+
+// Реализация шкафа в стиле классики
+class ClassicCabinet implements Cabinet {
+    @Override
+    public void open() {
+        System.out.println("Opening a classic cabinet.");
+    }
+}
+
+// Реализация стула в современном стиле
+class ModernChair implements Chair {
+    @Override
+    public void sitOn() {
+        System.out.println("Sitting on a modern chair.");
+    }
+}
+
+// Реализация стола в современном стиле
+class ModernTable implements Table {
+    @Override
+    public void use() {
+        System.out.println("Using a modern table.");
+    }
+}
+
+// Реализация шкафа в современном стиле
+class ModernCabinet implements Cabinet {
+    @Override
+    public void open() {
+        System.out.println("Opening a modern cabinet.");
+    }
+}
+
+// Реализация стула в минималистичном стиле
+class MinimalistChair implements Chair {
+    @Override
+    public void sitOn() {
+        System.out.println("Sitting on a minimalist chair.");
+    }
+}
+
+// Реализация стола в минималистичном стиле
+class MinimalistTable implements Table {
+    @Override
+    public void use() {
+        System.out.println("Using a minimalist table.");
+    }
+}
+
+// Реализация шкафа в минималистичном стиле
+class MinimalistCabinet implements Cabinet {
+    @Override
+    public void open() {
+        System.out.println("Opening a minimalist cabinet.");
+    }
+}
+
+// Пример использования
+public class FurnitureClient {
+    public static void main(String[] args) {
+        // Создаем фабрику для классической мебели
+        FurnitureFactory classicFactory = new ClassicFurnitureFactory();
+
+        // Создаем стул, стол и шкаф в классическом стиле
+        Chair classicChair = classicFactory.createChair();
+        Table classicTable = classicFactory.createTable();
+        Cabinet classicCabinet = classicFactory.createCabinet();
+
+        // Используем созданную мебель
+        classicChair.sitOn();
+        classicTable.use();
+        classicCabinet.open();
+
+        // Аналогично для других стилей мебели (современный, минимализм)
+        // FurnitureFactory modernFactory = new ModernFurnitureFactory();
+        // FurnitureFactory minimalistFactory = new MinimalistFurnitureFactory();
+        // ...
+    }
+}
