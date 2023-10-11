@@ -1,0 +1,58 @@
+//Создайте приложение для рисования, где пользователь может выбирать разные инструменты (карандаш, кисть, ластик) с помощью фабричного метода.
+// Интерфейс инструмента
+interface Tool {
+    void draw();
+}
+
+// Реализация карандаша
+class Pencil implements Tool {
+    @Override
+    public void draw() {
+        System.out.println("Рисуем карандашом");
+    }
+}
+
+// Реализация кисти
+class Brush implements Tool {
+    @Override
+    public void draw() {
+        System.out.println("Рисуем кистью");
+    }
+}
+
+// Реализация ластика
+class Eraser implements Tool {
+    @Override
+    public void draw() {
+        System.out.println("Используем ластик");
+    }
+}
+
+// Фабрика инструментов
+class ToolFactory {
+    public static Tool getTool(String toolType) {
+        switch (toolType) {
+            case "карандаш":
+                return new Pencil();
+            case "кисть":
+                return new Brush();
+            case "ластик":
+                return new Eraser();
+            default:
+                return null;
+        }
+    }
+}
+
+// Главный класс приложения
+public class DrawingApp {
+    public static void main(String[] args) {
+        Tool tool1 = ToolFactory.getTool("карандаш");
+        Tool tool2 = ToolFactory.getTool("кисть");
+        Tool tool3 = ToolFactory.getTool("ластик");
+
+        tool1.draw(); // Рисуем карандашом
+        tool2.draw(); // Рисуем кистью
+        tool3.draw(); // Используем ластик
+    }
+}
