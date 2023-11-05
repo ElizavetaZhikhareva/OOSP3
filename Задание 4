@@ -1,0 +1,53 @@
+//Создайте систему для чтения и записи данных из разных форматов файлов (например, CSV, JSON, XML) с помощью адаптеров.
+public interface DataAdapter {
+    List<DataObject> readData(String filePath);
+    void writeData(List<DataObject> data, String filePath);
+}
+
+public class CsvDataAdapter implements DataAdapter {
+    // Реализация методов для чтения и записи данных в формате CSV
+}
+
+public class JsonDataAdapter implements DataAdapter {
+    // Реализация методов для чтения и записи данных в формате JSON
+}
+
+public class XmlDataAdapter implements DataAdapter {
+    // Реализация методов для чтения и записи данных в формате XML
+}
+
+public class DataFileProcessor {
+    private DataAdapter adapter;
+
+    public DataFileProcessor(DataAdapter adapter) {
+        this.adapter = adapter;
+    }
+
+    public List<DataObject> readDataFromFile(String filePath) {
+        return adapter.readData(filePath);
+    }
+
+    public void writeDataToFile(List<DataObject> data, String filePath) {
+        adapter.writeData(data, filePath);
+    }
+}
+
+public static void main(String[] args) {
+    DataFileProcessor processor;
+    
+    // Выбор адаптера в зависимости от формата файла
+    if (args[0].endsWith(".csv")) {
+        processor = new DataFileProcessor(new CsvDataAdapter());
+    } else if (args[0].endsWith(".json")) {
+        processor = new DataFileProcessor(new JsonDataAdapter());
+    } else if (args[0].endsWith(".xml")) {
+        processor = new DataFileProcessor(new XmlDataAdapter());
+    } else {
+        throw new IllegalArgumentException("Unsupported file format");
+    }
+
+    List<DataObject> data = processor.readDataFromFile(args[0]);
+    // Обработка данных
+
+    processor.writeDataToFile(data, args[1]);
+}
