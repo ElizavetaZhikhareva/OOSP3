@@ -1,0 +1,87 @@
+// Абстракция: геометрическая фигура
+interface Shape {
+    void draw();
+}
+
+// Конкретные реализации абстракции (геометрические фигуры)
+class Circle implements Shape {
+    private DrawingAPI drawingAPI;
+    
+    public Circle(DrawingAPI drawingAPI) {
+        this.drawingAPI = drawingAPI;
+    }
+    
+    @Override
+    public void draw() {
+        System.out.println("Drawing Circle");
+        drawingAPI.draw();
+    }
+}
+
+class Square implements Shape {
+    private DrawingAPI drawingAPI;
+    
+    public Square(DrawingAPI drawingAPI) {
+        this.drawingAPI = drawingAPI;
+    }
+    
+    @Override
+    public void draw() {
+        System.out.println("Drawing Square");
+        drawingAPI.draw();
+    }
+}
+
+class Triangle implements Shape {
+    private DrawingAPI drawingAPI;
+    
+    public Triangle(DrawingAPI drawingAPI) {
+        this.drawingAPI = drawingAPI;
+    }
+    
+    @Override
+    public void draw() {
+        System.out.println("Drawing Triangle");
+        drawingAPI.draw();
+    }
+}
+
+// Абстракция: устройство вывода
+interface DrawingAPI {
+    void draw();
+}
+
+// Конкретные реализации устройства вывода
+class Monitor implements DrawingAPI {
+    @Override
+    public void draw() {
+        System.out.println("Drawing on Monitor");
+    }
+}
+
+class Printer implements DrawingAPI {
+    @Override
+    public void draw() {
+        System.out.println("Printing on Printer");
+    }
+}
+
+class Plotter implements DrawingAPI {
+    @Override
+    public void draw() {
+        System.out.println("Plotting on Plotter");
+    }
+}
+
+// Пример использования
+public class Main {
+    public static void main(String[] args) {
+        Shape circle = new Circle(new Monitor());
+        Shape square = new Square(new Printer());
+        Shape triangle = new Triangle(new Plotter());
+        
+        circle.draw();
+        square.draw();
+        triangle.draw();
+    }
+}
