@@ -1,0 +1,70 @@
+//Реализуйте паттерн "Строитель" для класса "Пользователь" (User), который позволяет задавать имя, фамилию, электронную почту и другие свойства пользователя.
+/ Класс Пользователь (User)
+public class User {
+    private final String firstName;
+    private final String lastName;
+    private final String email;
+    private final String phoneNumber;
+    // Другие свойства пользователя
+
+    // Приватный конструктор для использования только внутри класса Строителя
+    private User(UserBuilder builder) {
+        this.firstName = builder.firstName;
+        this.lastName = builder.lastName;
+        this.email = builder.email;
+        this.phoneNumber = builder.phoneNumber;
+        // Инициализация других свойств пользователя
+    }
+
+    // Геттеры для свойств пользователя
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    // Класс Строитель (UserBuilder)
+    public static class UserBuilder {
+        private final String firstName;
+        private final String lastName;
+        private String email;
+        private String phoneNumber;
+        // Другие свойства пользователя
+
+        public UserBuilder(String firstName, String lastName) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+        }
+
+        public UserBuilder setEmail(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public UserBuilder setPhoneNumber(String phoneNumber) {
+            this.phoneNumber = phoneNumber;
+            return this;
+        }
+
+        // Метод для создания объекта Пользователя (User) с помощью Строителя (UserBuilder)
+        public User build() {
+            return new User(this);
+        }
+    }
+}
+// Использование паттерна Строитель для создания объекта пользователя
+User user = new User.UserBuilder("Иван", "Иванов")
+                .setEmail("ivan@example.com")
+                .setPhoneNumber("123456789")
+                // Установка других свойств пользователя
+                .build();
