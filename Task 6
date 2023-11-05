@@ -1,0 +1,121 @@
+//Разработайте систему для аутентификации пользователей, где разные методы аутентификации (пароль, отпечаток пальца, OAuth) используют общий шаблонный метод.
+
+abstract class AuthenticationSystem {
+
+    // Шаблонный метод для аутентификации
+    public final void authenticate() {
+        if (validateUser()) {
+            // Проверка пользователя успешна
+            authorizeUser();
+        } else {
+            // Пользователь не прошел проверку
+            System.out.println("Аутентификация не удалась. Попробуйте снова.");
+        }
+    }
+
+    // Абстрактные методы, которые должны быть реализованы подклассами
+    protected abstract boolean validateUser();
+
+    protected abstract void authorizeUser();
+}
+
+class PasswordAuthenticationSystem extends AuthenticationSystem {
+
+    private String username;
+    private String password;
+
+    // Конструктор с передачей имени пользователя и пароля
+    public PasswordAuthenticationSystem(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    // Реализация методов для аутентификации по паролю
+    @Override
+    protected boolean validateUser() {
+        // Проверка пользователя по имени и паролю
+        // В реальном приложении здесь будет более сложная логика проверки
+        return isValidUsernameAndPassword(username, password);
+    }
+
+    @Override
+    protected void authorizeUser() {
+        // Авторизация пользователя после успешной проверки
+        System.out.println("Пользователь " + username + " успешно аутентифицирован по паролю.");
+    }
+
+    private boolean isValidUsernameAndPassword(String username, String password) {
+        // Проверка имени пользователя и пароля в базе данных или другом хранилище
+        // Здесь должна быть реальная логика проверки
+        return true;
+    }
+}
+
+class FingerprintAuthenticationSystem extends AuthenticationSystem {
+
+    // Реализация методов для аутентификации по отпечатку пальца
+    @Override
+    protected boolean validateUser() {
+        // Проверка пользователя по отпечатку пальца
+        // В реальном приложении здесь будет более сложная логика проверки
+        return isValidFingerprint();
+    }
+
+    @Override
+    protected void authorizeUser() {
+        // Авторизация пользователя после успешной проверки
+        System.out.println("Пользователь успешно аутентифицирован по отпечатку пальца.");
+    }
+
+    private boolean isValidFingerprint() {
+        // Проверка отпечатка пальца в системе
+        // Здесь должна быть реальная логика проверки
+        return true;
+    }
+}
+
+class OAuthAuthenticationSystem extends AuthenticationSystem {
+
+    private String oAuthToken;
+
+    // Конструктор с передачей токена OAuth
+    public OAuthAuthenticationSystem(String oAuthToken) {
+        this.oAuthToken = oAuthToken;
+    }
+
+    // Реализация методов для аутентификации через OAuth
+    @Override
+    protected boolean validateUser() {
+        // Проверка пользователя по токену OAuth
+        // В реальном приложении здесь будет более сложная логика проверки
+        return isValidOAuthToken(oAuthToken);
+    }
+
+    @Override
+    protected void authorizeUser() {
+        // Авторизация пользователя после успешной проверки
+        System.out.println("Пользователь успешно аутентифицирован через OAuth.");
+    }
+
+    private boolean isValidOAuthToken(String oAuthToken) {
+        // Проверка токена OAuth в системе
+        // Здесь должна быть реальная логика проверки
+        return true;
+    }
+}
+
+
+//пример использования
+public class Main {
+    public static void main(String[] args) {
+        // Примеры аутентификации для разных методов
+        AuthenticationSystem passwordAuth = new PasswordAuthenticationSystem("username", "password123");
+        passwordAuth.authenticate();
+
+        AuthenticationSystem fingerprintAuth = new FingerprintAuthenticationSystem();
+        fingerprintAuth.authenticate();
+
+        AuthenticationSystem oauthAuth = new OAuthAuthenticationSystem("oauth_token");
+        oauthAuth.authenticate();
+    }
+}
