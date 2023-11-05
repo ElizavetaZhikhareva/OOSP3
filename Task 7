@@ -1,0 +1,102 @@
+//Разработайте систему уведомлений для социальной сети, где пользователи могут подписываться на активность других пользователей и получать уведомления о их действиях (публикации, комментарии, лайки).
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE posts (
+    post_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    content TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE comments (
+    comment_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    post_id INT,
+    content TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE likes (
+    like_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    post_id INT
+);
+
+CREATE TABLE subscriptions (
+    subscription_id INT AUTO_INCREMENT PRIMARY KEY,
+    follower_id INT,
+    following_id INT
+);
+
+CREATE TABLE notifications (
+    notification_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    content TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class NotificationSystem {
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/social_network";
+    private static final String DB_USER = "username";
+    private static final String DB_PASSWORD = "password";
+
+    public static Connection getConnection() {
+        try {
+            return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void sendNotification(int userId, String content) {
+        String query = "INSERT INTO notifications (user_id, content) VALUES (?, ?)";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            stmt.setString(2, content);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<String> getNotifications(int userId) {
+        List<String> notifications = new ArrayList<>();
+        String query = "SELECT content FROM notifications WHERE user_id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            ResultSet resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                notifications.add(resultSet.getString("content"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return notifications;
+    }
+
+    public static void main(String[] args) {
+        NotificationSystem notificationSystem = new NotificationSystem();
+
+        // Пример использования:
+        int userId = 1;
+        notificationSystem.sendNotification(userId, "Ваш друг John опубликовал новый пост");
+        List<String> notifications = notificationSystem.getNotifications(userId);
+        for (String notification : notifications) {
+            System.out.println(notification);
+        }
+    }
+}
