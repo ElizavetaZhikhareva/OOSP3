@@ -1,0 +1,128 @@
+//Создайте приложение для рисования, которое позволяет сохранять и восстанавливать состояние рисунка.
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.util.ArrayList;
+
+public class DrawingApp {
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                createAndShowGUI();
+            }
+        });
+    }
+
+    private static void createAndShowGUI() {
+        JFrame frame = new JFrame("Простое приложение для рисования");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(800, 600);
+
+        DrawingPanel drawingPanel = new DrawingPanel();
+        frame.add(drawingPanel, BorderLayout.CENTER);
+
+        JPanel controlPanel = new JPanel();
+        JButton clearButton = new JButton("Очистить");
+        JButton saveButton = new JButton("Сохранить");
+        JButton loadButton = new JButton("Загрузить");
+        controlPanel.add(clearButton);
+        controlPanel.add(saveButton);
+        controlPanel.add(loadButton);
+
+        frame.add(controlPanel, BorderLayout.SOUTH);
+
+        clearButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                drawingPanel.clear();
+            }
+        });
+
+        saveButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                int result = fileChooser.showSaveDialog(frame);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File file = fileChooser.getSelectedFile();
+                    drawingPanel.saveDrawing(file);
+                }
+            }
+        });
+
+        loadButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                int result = fileChooser.showOpenDialog(frame);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File file = fileChooser.getSelectedFile();
+                    drawingPanel.loadDrawing(file);
+                }
+            }
+        });
+
+        frame.setVisible(true);
+    }
+}
+
+class DrawingPanel extends JPanel {
+    private ArrayList<ArrayList<Point>> lines;
+    private ArrayList<Point> currentLine;
+
+    public DrawingPanel() {
+        lines = new ArrayList<>();
+        currentLine = new ArrayList<>();
+
+        addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                currentLine = new ArrayList<>();
+                currentLine.add(e.getPoint());
+                lines.add(currentLine);
+                repaint();
+            }
+        });
+
+        addMouseMotionListener(new MouseAdapter() {
+            public void mouseDragged(MouseEvent e) {
+                currentLine.add(e.getPoint());
+                repaint();
+            }
+        });
+    }
+
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setColor(Color.BLACK);
+        g2.setStroke(new BasicStroke(2));
+
+        for (ArrayList<Point> line : lines) {
+            for (int i = 1; i < line.size(); i++) {
+                Point p1 = line.get(i - 1);
+                Point p2 = line.get(i);
+                g2.drawLine(p1.x, p1.y, p2.x, p2.y);
+            }
+        }
+    }
+
+    public void clear() {
+        lines.clear();
+        repaint();
+    }
+
+    public void saveDrawing(File file) {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file))) {
+            out.writeObject(lines);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadDrawing(File file) {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
+            lines = (ArrayList<ArrayList<Point>>) in.readObject();
+            repaint();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+}
