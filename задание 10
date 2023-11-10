@@ -1,0 +1,53 @@
+//Реализуйте паттерн "Фасад" для системы заказа билетов, который объединяет функции выбора мероприятия, выбора места и оплаты билета.
+
+// Подсистема выбора мероприятия
+class EventSelection {
+    public void selectEvent(String eventName) {
+        System.out.println("Выбрано мероприятие: " + eventName);
+    }
+}
+
+// Подсистема выбора места
+class SeatSelection {
+    public void selectSeat(int seatNumber) {
+        System.out.println("Выбрано место: " + seatNumber);
+    }
+}
+
+// Подсистема оплаты
+class Payment {
+    public void makePayment(double amount) {
+        System.out.println("Оплата на сумму: " + amount + " рублей прошла успешно");
+    }
+}
+
+// Фасад, объединяющий функции выбора мероприятия, выбора места и оплаты билета
+class TicketBookingFacade {
+    private EventSelection eventSelection;
+    private SeatSelection seatSelection;
+    private Payment payment;
+
+    public TicketBookingFacade() {
+        this.eventSelection = new EventSelection();
+        this.seatSelection = new SeatSelection();
+        this.payment = new Payment();
+    }
+
+    public void bookTicket(String eventName, int seatNumber, double amount) {
+        eventSelection.selectEvent(eventName);
+        seatSelection.selectSeat(seatNumber);
+        payment.makePayment(amount);
+        System.out.println("Билет успешно забронирован!");
+    }
+}
+
+// Пример использования фасада
+public class Main {
+    public static void main(String[] args) {
+        // Создаем фасад для заказа билетов
+        TicketBookingFacade ticketBookingFacade = new TicketBookingFacade();
+
+        // Заказываем билет, указывая мероприятие, место и сумму оплаты
+        ticketBookingFacade.bookTicket("Концерт", 15, 500.0);
+    }
+}
