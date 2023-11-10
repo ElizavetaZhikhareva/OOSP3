@@ -1,0 +1,73 @@
+//Разработайте систему на основании паттерна "Прототип" управления документами, в которой можно клонировать документы с сохранением их содержимого.
+import java.util.HashMap;
+import java.util.Map;
+
+// Пример класса документа
+class Document implements Cloneable {
+    private String content;
+
+    public Document(String content) {
+        this.content = content;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    @Override
+    public Document clone() {
+        try {
+            return (Document) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return null;
+        }
+    }
+}
+
+// Пример класса для управления документами
+class DocumentManager {
+    private Map<String, Document> documentRegistry = new HashMap<>();
+
+    public void addDocument(String key, Document document) {
+        documentRegistry.put(key, document);
+    }
+
+    public Document getDocument(String key) {
+        return documentRegistry.get(key);
+    }
+
+    public Document cloneDocument(String key) {
+        Document originalDocument = documentRegistry.get(key);
+        if (originalDocument != null) {
+            // Используем метод clone() для создания клона документа
+            return originalDocument.clone();
+        }
+        return null;
+    }
+}
+
+public class PrototypePatternExample {
+    public static void main(String[] args) {
+        // Создаем менеджер документов
+        DocumentManager documentManager = new DocumentManager();
+
+        // Создаем оригинальный документ
+        Document originalDocument = new Document("Оригинальное содержимое документа");
+
+        // Добавляем оригинальный документ в менеджер
+        documentManager.addDocument("doc1", originalDocument);
+
+        // Клонируем документ
+        Document clonedDocument = documentManager.cloneDocument("doc1");
+
+        // Проверяем, что содержимое клонированного документа совпадает с оригинальным
+        if (clonedDocument != null) {
+            System.out.println("Оригинальное содержимое: " + originalDocument.getContent());
+            System.out.println("Содержимое клонированного документа: " + clonedDocument.getContent());
+        }
+    }
+}
