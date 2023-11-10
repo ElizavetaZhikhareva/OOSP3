@@ -1,0 +1,50 @@
+//Создайте класс "Менеджер подключений к базе данных", который обеспечивает единственное соединение с базой данных.
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class DatabaseConnectionManager {
+    private static DatabaseConnectionManager instance;
+    private Connection connection;
+
+    // Приватный конструктор, чтобы предотвратить создание экземпляров извне
+    private DatabaseConnectionManager() {
+        // В реальном коде здесь должен быть код инициализации подключения к базе данных
+        // Например, загрузка драйвера, установка параметров подключения и т. д.
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            String url = "jdbc:mysql://localhost:3306/your_database";
+            String username = "your_username";
+            String password = "your_password";
+            this.connection = DriverManager.getConnection(url, username, password);
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+            // Обработка ошибок подключения к базе данных
+        }
+    }
+
+    // Метод для получения единственного экземпляра класса
+    public static DatabaseConnectionManager getInstance() {
+        if (instance == null) {
+            instance = new DatabaseConnectionManager();
+        }
+        return instance;
+    }
+
+    // Метод для получения соединения с базой данных
+    public Connection getConnection() {
+        return this.connection;
+    }
+
+    // Метод для закрытия соединения с базой данных
+    public void closeConnection() {
+        try {
+            if (this.connection != null) {
+                this.connection.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Обработка ошибок закрытия соединения
+        }
+    }
+}
