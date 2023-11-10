@@ -1,0 +1,69 @@
+//Разработайте систему по паттерну "Компоновщик" управления задачами, позволяющую группировать задачи в категории и подкатегории.
+import java.util.ArrayList;
+import java.util.List;
+
+// Компонент
+interface Task {
+    void print();
+}
+
+// Лист
+class LeafTask implements Task {
+    private String name;
+
+    public LeafTask(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void print() {
+        System.out.println("Задача: " + name);
+    }
+}
+
+// Композит
+class CompositeTask implements Task {
+    private String name;
+    private List<Task> subTasks = new ArrayList<>();
+
+    public CompositeTask(String name) {
+        this.name = name;
+    }
+
+    public void addTask(Task task) {
+        subTasks.add(task);
+    }
+
+    @Override
+    public void print() {
+        System.out.println("Категория/Подкатегория: " + name);
+        for (Task task : subTasks) {
+            task.print();
+        }
+    }
+}
+
+public class TaskManager {
+    public static void main(String[] args) {
+        // Создаем задачи
+        Task task1 = new LeafTask("Задача 1");
+        Task task2 = new LeafTask("Задача 2");
+        Task task3 = new LeafTask("Задача 3");
+
+        // Создаем категории и подкатегории
+        CompositeTask category1 = new CompositeTask("Категория 1");
+        CompositeTask subCategory1 = new CompositeTask("Подкатегория 1.1");
+        CompositeTask subCategory2 = new CompositeTask("Подкатегория 1.2");
+
+        // Добавляем задачи в категории и подкатегории
+        subCategory1.addTask(task1);
+        subCategory1.addTask(task2);
+        subCategory2.addTask(task3);
+
+        category1.addTask(subCategory1);
+        category1.addTask(subCategory2);
+
+        // Выводим все задачи
+        category1.print();
+    }
+}
